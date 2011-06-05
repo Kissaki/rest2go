@@ -15,19 +15,19 @@ import (
 )
 
 var wdmap = map[string]string{
-			"Mo":"Monday",
-			"Tu":"Tuesday",
-			"We": "Wednesday",
-			"Th": "Thursday",
-			"Fr": "Friday",
-			"Sa": "Saturday",
-			"Su": "Sunday",
-			
-		}
+	"Mo": "Monday",
+	"Tu": "Tuesday",
+	"We": "Wednesday",
+	"Th": "Thursday",
+	"Fr": "Friday",
+	"Sa": "Saturday",
+	"Su": "Sunday",
+}
 
 type Weekdays struct {
 	wd map[string]string
 }
+
 func (wd *Weekdays) Index(resp http.ResponseWriter) {
 	for i, v := range wd.wd {
 		fmt.Fprintf(resp, "%s: %s<br/>\n", i, v)
@@ -42,7 +42,7 @@ func (wd *Weekdays) Find(resp http.ResponseWriter, id string) {
 func main() {
 	log.Println("Starting Server")
 	address := "127.0.0.1:3000"
-	
+
 	var wd = new(Weekdays)
 	wd.wd = wdmap
 	rest.Resource("wd", wd)
@@ -51,4 +51,3 @@ func main() {
 		log.Fatalln(err)
 	}
 }
-
