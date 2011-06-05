@@ -1,0 +1,11 @@
+rest.go example server
+provides a mapping from 2-char weekday identifies to the full weekday names
+index and id-get functionality only for simplicity
+
+Requires rest.go obviously
+
+To compile:
+$ gomake
+To run:
+$ ./wd
+
