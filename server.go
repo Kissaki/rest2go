@@ -9,8 +9,6 @@
 		* Find(http.ResponseWriter, id string)
 		* Update(http.ResponseWriter, id string, *http.Request)
 		* Delete(http.ResponseWriter, id string)
-	
-	TODO: According to Golang naming convention, 1-method-interfaces should be named differently: Indexer, Creator, etc.
 */
 package rest
 
