@@ -14,6 +14,17 @@ import (
 	"github.com/Kissaki/rest.go"
 )
 
+var wdmap = map[string]string{
+			"Mo":"Monday",
+			"Tu":"Tuesday",
+			"We": "Wednesday",
+			"Th": "Thursday",
+			"Fr": "Friday",
+			"Sa": "Saturday",
+			"Su": "Sunday",
+			
+		}
+
 type Weekdays struct {
 	wd map[string]string
 }
@@ -29,24 +40,11 @@ func (wd *Weekdays) Find(resp http.ResponseWriter, id string) {
 }
 
 func main() {
-	serve()
-}
-
-func serve() {
 	log.Println("Starting Server")
 	address := "127.0.0.1:3000"
 	
 	var wd = new(Weekdays)
-	wd.wd = map[string]string{
-			"Mo":"Monday",
-			"Tu":"Tuesday",
-			"We": "Wednesday",
-			"Th": "Thursday",
-			"Fr": "Friday",
-			"Sa": "Saturday",
-			"Su": "Sunday",
-			
-		}
+	wd.wd = wdmap
 	rest.Resource("wd", wd)
 
 	if err := http.ListenAndServe(address, nil); err != nil {
