@@ -1,20 +1,27 @@
 A RESTful HTTP client and server.
 
+
+Installation
+============
+
 Install by running:
 
 	goinstall github.com/nathankerr/rest.go
 
-Checkout examples/snips/snips.go for a simple client and server example
 
-rest.go uses the standard http package by adding resource routes. Add
-a new route by:
+Usage
+=====
+
+See the *examples* folder for coded examples.
+
+rest.go uses the standard http package to provide resources through specified resource routes.
+Add a new route like:
 
 	rest.Resource("resourcepath", resourcevariable)
 
-and then use http as normal.
+The resource URI-path is then */resourcepath/*.
 
-A resource is an object that may have any of the following methods which
-respond to the specified HTTP requests:
+A *resource* is an object that may have any of the following methods which respond to the specified HTTP requests:
 
 	GET /resource/ => Index(http.ResponseWriter)
 	GET /resource/id => Find(http.ResponseWriter, id string)
@@ -27,4 +34,5 @@ respond to the specified HTTP requests:
 The server will then route HTTP requests to the appropriate method call.
 
 The snips example provides a full example of both a client and server.
+The weekdays example project implements a simple REST server.
 
