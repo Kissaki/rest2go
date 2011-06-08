@@ -4,10 +4,11 @@
 
 include $(GOROOT)/src/Make.inc
 
-TARG=rest
+TARG=github.com/Kissaki/rest.go
 GOFMT=gofmt
 
 GOFILES=\
+	resource-interfaces.go\
 	server.go\
 	client.go\
 

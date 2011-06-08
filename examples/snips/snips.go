@@ -8,9 +8,9 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
-	"github.com/nathankerr/rest.go"
+//	"github.com/nathankerr/rest.go"
 //	"github.com/jessta/rest.go"
-//	"github.com/Kissaki/rest.go"
+	"github.com/Kissaki/rest.go"
 )
 
 var server = flag.Bool("server", false, "start in server mode")

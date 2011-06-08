@@ -14,8 +14,7 @@ Usage
 
 See the *examples* folder for coded examples.
 
-rest.go uses the standard http package to provide resources through specified resource routes.
-Add a new route like:
+rest.go uses the standard http package to provide resources through specified resource routes. Add a new route and corresponding resource using the Resource method:
 
 	rest.Resource("resourcepath", resourcevariable)
 

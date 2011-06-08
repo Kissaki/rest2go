@@ -1,47 +1,13 @@
 package rest
 
 import (
+	"log"
 	"fmt"
 	"http"
 	"strings"
 )
 
 var resources = make(map[string]interface{})
-
-// Lists all the items in the resource
-// GET /resource/
-type index interface {
-	Index(http.ResponseWriter)
-}
-
-// Creates a new resource item
-// POST /resource/
-type create interface {
-	Create(http.ResponseWriter, *http.Request)
-}
-
-// Views a resource item
-// GET /resource/id
-type find interface {
-	Find(http.ResponseWriter, string)
-}
-
-// PUT /resource/id
-type update interface {
-	Update(http.ResponseWriter, string, *http.Request)
-}
-
-// DELETE /resource/id
-type delete interface {
-	Delete(http.ResponseWriter, string)
-}
-
-// Return options to use the service. If string is nil, then it is the base URL
-// OPTIONS /resource/id
-// OPTIONS /resource/
-type options interface {
-	Options(http.ResponseWriter, string)
-}
 
 // Generic resource handler
 func resourceHandler(c http.ResponseWriter, req *http.Request) {
@@ -60,64 +26,74 @@ func resourceHandler(c http.ResponseWriter, req *http.Request) {
 		fmt.Fprintf(c, "resource %s not found\n", resourceName)
 	}
 
-	if len(id) == 0 {
-		switch req.Method {
-		case "GET":
-			// Index
-			if resIndex, ok := resource.(index); ok {
-				resIndex.Index(c)
-			} else {
+	var hasAccess bool = false
+	if accesschecker, ok := resource.(accessChecker); ok {
+		hasAccess = accesschecker.HasAccess(req)
+	} else {
+		log.Println("Resource ", resourceName, " has no accessChecker. Giving access …")
+		// no checker for resource, so always give access
+		hasAccess = true
+	}
+	if hasAccess {
+		if len(id) == 0 {
+			switch req.Method {
+			case "GET":
+				// Index
+				if resIndex, ok := resource.(indexer); ok {
+					resIndex.Index(c)
+				} else {
+					NotImplemented(c)
+				}
+			case "POST":
+				// Create
+				if resCreate, ok := resource.(creater); ok {
+					resCreate.Create(c, req)
+				} else {
+					NotImplemented(c)
+				}
+			case "OPTIONS":
+				// automatic options listing
+				if resOptions, ok := resource.(optioner); ok {
+					resOptions.Options(c, id)
+				} else {
+					NotImplemented(c)
+				}
+			default:
 				NotImplemented(c)
 			}
-		case "POST":
-			// Create
-			if resCreate, ok := resource.(create); ok {
-				resCreate.Create(c, req)
-			} else {
+		} else { // ID was passed
+			switch req.Method {
+			case "GET":
+				// Find
+				if resFind, ok := resource.(finder); ok {
+					resFind.Find(c, id)
+				} else {
+					NotImplemented(c)
+				}
+			case "PUT":
+				// Update
+				if resUpdate, ok := resource.(updater); ok {
+					resUpdate.Update(c, id, req)
+				} else {
+					NotImplemented(c)
+				}
+			case "DELETE":
+				// Delete
+				if resDelete, ok := resource.(deleter); ok {
+					resDelete.Delete(c, id)
+				} else {
+					NotImplemented(c)
+				}
+			case "OPTIONS":
+				// automatic options
+				if resOptions, ok := resource.(optioner); ok {
+					resOptions.Options(c, id)
+				} else {
+					NotImplemented(c)
+				}
+			default:
 				NotImplemented(c)
 			}
-		case "OPTIONS":
-			// automatic options listing
-			if resOptions, ok := resource.(options); ok {
-				resOptions.Options(c, id)
-			} else {
-				NotImplemented(c)
-			}
-		default:
-			NotImplemented(c)
-		}
-	} else { // ID was passed
-		switch req.Method {
-		case "GET":
-			// Find
-			if resFind, ok := resource.(find); ok {
-				resFind.Find(c, id)
-			} else {
-				NotImplemented(c)
-			}
-		case "PUT":
-			// Update
-			if resUpdate, ok := resource.(update); ok {
-				resUpdate.Update(c, id, req)
-			} else {
-				NotImplemented(c)
-			}
-		case "DELETE":
-			// Delete
-			if resDelete, ok := resource.(delete); ok {
-				resDelete.Delete(c, id)
-			} else {
-				NotImplemented(c)
-			}
-		case "OPTIONS":
-			// automatic options
-			if resOptions, ok := resource.(options); ok {
-				resOptions.Options(c, id)
-			} else {
-				NotImplemented(c)
-			}
-		default:
-			NotImplemented(c)
 		}
 	}
 }
