@@ -28,7 +28,7 @@ func resourceHandler(c http.ResponseWriter, req *http.Request) {
 
 	var hasAccess bool = false
 	if accesschecker, ok := resource.(accessChecker); ok {
-		hasAccess = accesschecker.HasAccess(req)
+		hasAccess, _ = accesschecker.HasAccess(req)
 	} else {
 		log.Println("Resource ", resourceName, " has no accessChecker. Giving access …")
 		// no checker for resource, so always give access

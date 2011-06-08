@@ -1,12 +1,13 @@
 package rest
 
 import (
+	"os"
 	"http"
 )
 
 // Checks if the request is actually permitted to access the resource in the requested way
 type accessChecker interface {
-	HasAccess(*http.Request) bool
+	HasAccess(*http.Request) (bool, os.Error)
 }
 
 // Lists all the items in the resource

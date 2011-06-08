@@ -30,6 +30,11 @@ A *resource* is an object that may have any of the following methods which respo
 	OPTIONS /resource/ => Options(http.ResponseWriter, id string)
 	OPTIONS /resource/id => Options(http.ResponseWriter, id string)
 
+If you want to add a permission/accessibility-check to the resource, implement
+
+	HasAccess(*http.Request) (bool, os.Error)
+
+
 The server will then route HTTP requests to the appropriate method call.
 
 The snips example provides a full example of both a client and server.
