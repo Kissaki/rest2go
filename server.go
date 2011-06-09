@@ -35,45 +35,27 @@ func resourceHandler(c http.ResponseWriter, req *http.Request) {
 		hasAccess = true
 	}
 	if hasAccess {
-		if len(id) == 0 {
-			switch req.Method {
+		switch req.Method {
 			case "GET":
-				// Index
-				if resIndex, ok := resource.(indexer); ok {
-					resIndex.Index(c)
+				if len(id) == 0 {
+					// no ID -> Index
+					if resIndex, ok := resource.(indexer); ok {
+						resIndex.Index(c)
+					} else {
+						NotImplemented(c)
+					}
 				} else {
-					NotImplemented(c)
+					// Find by ID
+					if resFind, ok := resource.(finder); ok {
+						resFind.Find(c, id)
+					} else {
+						NotImplemented(c)
+					}
 				}
 			case "POST":
 				// Create
 				if resCreate, ok := resource.(creater); ok {
 					resCreate.Create(c, req)
-				} else {
-					NotImplemented(c)
-				}
-			case "DELETE":
-				// Delete
-				if resDelete, ok := resource.(deleter); ok {
-					resDelete.Delete(c, id)
-				} else {
-					NotImplemented(c)
-				}
-			case "OPTIONS":
-				// automatic options listing
-				if resOptions, ok := resource.(optioner); ok {
-					resOptions.Options(c, id)
-				} else {
-					NotImplemented(c)
-				}
-			default:
-				NotImplemented(c)
-			}
-		} else { // ID was passed
-			switch req.Method {
-			case "GET":
-				// Find
-				if resFind, ok := resource.(finder); ok {
-					resFind.Find(c, id)
 				} else {
 					NotImplemented(c)
 				}
@@ -92,7 +74,7 @@ func resourceHandler(c http.ResponseWriter, req *http.Request) {
 					NotImplemented(c)
 				}
 			case "OPTIONS":
-				// automatic options
+				// List usable HTTP methods
 				if resOptions, ok := resource.(optioner); ok {
 					resOptions.Options(c, id)
 				} else {
@@ -100,7 +82,6 @@ func resourceHandler(c http.ResponseWriter, req *http.Request) {
 				}
 			default:
 				NotImplemented(c)
-			}
 		}
 	}
 }
