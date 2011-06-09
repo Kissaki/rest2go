@@ -51,6 +51,13 @@ func resourceHandler(c http.ResponseWriter, req *http.Request) {
 				} else {
 					NotImplemented(c)
 				}
+			case "DELETE":
+				// Delete
+				if resDelete, ok := resource.(deleter); ok {
+					resDelete.Delete(c, id)
+				} else {
+					NotImplemented(c)
+				}
 			case "OPTIONS":
 				// automatic options listing
 				if resOptions, ok := resource.(optioner); ok {
