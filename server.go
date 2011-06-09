@@ -11,30 +11,39 @@ var resources = make(map[string]interface{})
 
 // Generic resource handler
 func resourceHandler(c http.ResponseWriter, req *http.Request) {
-	// Parse request URI to resource URI and (potential) ID
-	var resourceEnd = strings.Index(req.URL.Path[1:], "/") + 1
-	var resourceName string
-	if resourceEnd == -1 {
-		resourceName = req.URL.Path[1:]
-	} else {
-		resourceName = req.URL.Path[1:resourceEnd]
-	}
-	var id = req.URL.Path[resourceEnd+1:]
-
-	resource, ok := resources[resourceName]
+	uriPath := req.URL.Path
+	
+	// try to get resource with full uri path
+	resource, ok := resources[uriPath]
+	var id string
 	if !ok {
-		fmt.Fprintf(c, "resource %s not found\n", resourceName)
+		// no resource found, thus check if the path is a resource + ID
+		i := strings.LastIndex(uriPath, "/")
+		if i == -1 {
+			log.Println("Invalid URI-path ", uriPath)
+			NotFound(c)
+			return
+		}
+		id = uriPath[i+1:]
+		uriPathParent := uriPath[:i]
+		resource, ok = resources[uriPathParent]
+		if !ok {
+			log.Println("Invalid URI-path ", uriPath)
+			NotFound(c)
+			return
+		}
 	}
 
 	var hasAccess bool = false
 	if accesschecker, ok := resource.(accessChecker); ok {
 		hasAccess, _ = accesschecker.HasAccess(req)
 	} else {
-		log.Println("Resource ", resourceName, " has no accessChecker. Giving access …")
 		// no checker for resource, so always give access
+		log.Println("Resource ", uriPath, " has no accessChecker. Giving access …")
 		hasAccess = true
 	}
 	if hasAccess {
+		// call method on resource corresponding to the HTTP method
 		switch req.Method {
 			case "GET":
 				if len(id) == 0 {
@@ -84,12 +93,24 @@ func resourceHandler(c http.ResponseWriter, req *http.Request) {
 				NotImplemented(c)
 		}
 	}
+	return
 }
 
-// Add a resource route to http
-func Resource(name string, res interface{}) {
-	resources[name] = res
-	http.Handle("/"+name+"/", http.HandlerFunc(resourceHandler))
+// Add a resource route
+func Resource(path string, res interface{}) {
+	// check and warn for missing leading slash
+	if fmt.Sprint(path[0]) == "/" {
+		log.Println("Resource was added with a path no leading slash. Did you mean to add /", path," ?")
+	}
+	// add potentially missing trailing slash (resource always ends with slash)
+	pathLen := len(path)
+	if len(path)>1 && path[pathLen-1:pathLen] != "/" {
+		log.Println("adding trailing slash to ", path)
+		path = fmt.Sprint(path, "/")
+	}
+	log.Println("Adding resource ", res, " at ", path)
+	resources[path] = res
+	http.Handle(path, http.HandlerFunc(resourceHandler))
 }
 
 // Emits a 404 Not Found
