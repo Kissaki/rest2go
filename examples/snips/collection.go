@@ -12,7 +12,7 @@ import (
 
 // Snip definintion
 type Snip struct {
-	Id int
+	Id   int
 	Body string
 }
 
@@ -23,11 +23,11 @@ func NewSnip(id int, body string) *Snip {
 
 // SnipsCollection definition
 type SnipsCollection struct {
-	v *vector.Vector
+	v      *vector.Vector
 	nextId int
 }
 
-func NewSnipsCollection() (*SnipsCollection) {
+func NewSnipsCollection() *SnipsCollection {
 	log.Println("Creating new SnipsCollection")
 	return &SnipsCollection{new(vector.Vector), 0}
 }

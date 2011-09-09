@@ -18,7 +18,7 @@ var formatting = "formatting instructions go here"
 
 // Get an index of the snips in the collection
 func (snips *SnipsCollection) Index(c http.ResponseWriter) {
-	for _,snip := range snips.All() {
+	for _, snip := range snips.All() {
 		fmt.Fprintf(c, "<a href=\"%v\">%v</a>%v<br/>", snip.Id, snip.Id, snip.Body)
 	}
 }

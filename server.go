@@ -12,7 +12,7 @@ var resources = make(map[string]interface{})
 // Generic resource handler
 func resourceHandler(c http.ResponseWriter, req *http.Request) {
 	uriPath := req.URL.Path
-	
+
 	// try to get resource with full uri path
 	resource, ok := resources[uriPath]
 	var id string
@@ -45,52 +45,52 @@ func resourceHandler(c http.ResponseWriter, req *http.Request) {
 	if hasAccess {
 		// call method on resource corresponding to the HTTP method
 		switch req.Method {
-			case "GET":
-				if len(id) == 0 {
-					// no ID -> Index
-					if resIndex, ok := resource.(indexer); ok {
-						resIndex.Index(c)
-					} else {
-						NotImplemented(c)
-					}
-				} else {
-					// Find by ID
-					if resFind, ok := resource.(finder); ok {
-						resFind.Find(c, id)
-					} else {
-						NotImplemented(c)
-					}
-				}
-			case "POST":
-				// Create
-				if resCreate, ok := resource.(creater); ok {
-					resCreate.Create(c, req)
+		case "GET":
+			if len(id) == 0 {
+				// no ID -> Index
+				if resIndex, ok := resource.(indexer); ok {
+					resIndex.Index(c)
 				} else {
 					NotImplemented(c)
 				}
-			case "PUT":
-				// Update
-				if resUpdate, ok := resource.(updater); ok {
-					resUpdate.Update(c, id, req)
+			} else {
+				// Find by ID
+				if resFind, ok := resource.(finder); ok {
+					resFind.Find(c, id)
 				} else {
 					NotImplemented(c)
 				}
-			case "DELETE":
-				// Delete
-				if resDelete, ok := resource.(deleter); ok {
-					resDelete.Delete(c, id)
-				} else {
-					NotImplemented(c)
-				}
-			case "OPTIONS":
-				// List usable HTTP methods
-				if resOptions, ok := resource.(optioner); ok {
-					resOptions.Options(c, id)
-				} else {
-					NotImplemented(c)
-				}
-			default:
+			}
+		case "POST":
+			// Create
+			if resCreate, ok := resource.(creater); ok {
+				resCreate.Create(c, req)
+			} else {
 				NotImplemented(c)
+			}
+		case "PUT":
+			// Update
+			if resUpdate, ok := resource.(updater); ok {
+				resUpdate.Update(c, id, req)
+			} else {
+				NotImplemented(c)
+			}
+		case "DELETE":
+			// Delete
+			if resDelete, ok := resource.(deleter); ok {
+				resDelete.Delete(c, id)
+			} else {
+				NotImplemented(c)
+			}
+		case "OPTIONS":
+			// List usable HTTP methods
+			if resOptions, ok := resource.(optioner); ok {
+				resOptions.Options(c, id)
+			} else {
+				NotImplemented(c)
+			}
+		default:
+			NotImplemented(c)
 		}
 	}
 	return
@@ -100,15 +100,15 @@ func resourceHandler(c http.ResponseWriter, req *http.Request) {
 func Resource(path string, res interface{}) {
 	// check and warn for missing leading slash
 	if fmt.Sprint(path[0]) == "/" {
-		log.Println("Resource was added with a path no leading slash. Did you mean to add /", path," ?")
+		log.Println("Resource was added with a path no leading slash. Did you mean to add /", path, " ?")
 	}
 	// add potentially missing trailing slash (resource always ends with slash)
 	pathLen := len(path)
-	if len(path)>1 && path[pathLen-1:pathLen] != "/" {
+	if len(path) > 1 && path[pathLen-1:pathLen] != "/" {
 		log.Println("adding trailing slash to ", path)
 		path = fmt.Sprint(path, "/")
 	}
-	log.Println("Adding resource ", res, " at ", path)
+	log.Println("Adding resource ", *res, " at ", path)
 	resources[path] = res
 	http.Handle(path, http.HandlerFunc(resourceHandler))
 }
