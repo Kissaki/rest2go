@@ -6,7 +6,7 @@ Installation
 
 Install by running:
 
-	goinstall github.com/nathankerr/rest.go
+	goinstall github.com/Kissaki/rest.go
 
 
 Usage
