@@ -99,12 +99,12 @@ func resourceHandler(c http.ResponseWriter, req *http.Request) {
 // Add a resource route
 func Resource(path string, res interface{}) {
 	// check and warn for missing leading slash
-	if fmt.Sprint(path[0]) == "/" {
-		log.Println("Resource was added with a path no leading slash. Did you mean to add /", path, " ?")
+	if fmt.Sprint(path[0:1]) != "/" {
+		log.Println("Resource was added with a path with no leading slash. Did you mean to add /", path, " ?")
 	}
 	// add potentially missing trailing slash (resource always ends with slash)
 	pathLen := len(path)
-	if len(path) > 1 && path[pathLen-1:pathLen] != "/" {
+	if pathLen > 1 && path[pathLen-1:pathLen] != "/" {
 		log.Println("adding trailing slash to ", path)
 		path = fmt.Sprint(path, "/")
 	}

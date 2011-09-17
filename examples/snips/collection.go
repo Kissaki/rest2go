@@ -31,7 +31,7 @@ type SnipsCollection struct {
 // SnipsCollection creation function
 func NewSnipsCollection() *SnipsCollection {
 	log.Println("Creating new SnipsCollection")
-	return &SnipsCollection{new(vector.Vector), 0}
+	return &SnipsCollection{v: new(vector.Vector), nextId: 0}
 }
 
 // Add a new snippet (snipped with passed text as body)
