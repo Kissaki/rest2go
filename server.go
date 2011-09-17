@@ -108,7 +108,7 @@ func Resource(path string, res interface{}) {
 		log.Println("adding trailing slash to ", path)
 		path = fmt.Sprint(path, "/")
 	}
-	log.Println("Adding resource ", *res, " at ", path)
+	log.Println("Adding resource ", res, " at ", path)
 	resources[path] = res
 	http.Handle(path, http.HandlerFunc(resourceHandler))
 }
