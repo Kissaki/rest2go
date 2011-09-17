@@ -16,7 +16,8 @@ type Snip struct {
 	Body string
 }
 
-func NewSnip(id int, body string) *Snip {
+// Create a new snippet
+func newSnip(id int, body string) *Snip {
 	log.Println("Creating new Snip:", id, body)
 	return &Snip{id, body}
 }
@@ -27,22 +28,25 @@ type SnipsCollection struct {
 	nextId int
 }
 
+// SnipsCollection creation function
 func NewSnipsCollection() *SnipsCollection {
 	log.Println("Creating new SnipsCollection")
 	return &SnipsCollection{new(vector.Vector), 0}
 }
 
+// Add a new snippet (snipped with passed text as body)
 func (snips *SnipsCollection) Add(body string) int {
 	log.Println("Adding Snip:", body)
 	id := snips.nextId
 	snips.nextId++
 
-	snip := NewSnip(id, body)
+	snip := newSnip(id, body)
 	snips.v.Push(snip)
 
 	return id
 }
 
+// Get a snippet by ID
 func (snips *SnipsCollection) WithId(id int) (*Snip, bool) {
 	log.Println("Finding Snip with id: ", id)
 	all := *snips.v
@@ -55,6 +59,7 @@ func (snips *SnipsCollection) WithId(id int) (*Snip, bool) {
 	return nil, false
 }
 
+// Get all snippets
 func (snips *SnipsCollection) All() []*Snip {
 	log.Println("Finding all Snips")
 	data := *snips.v
@@ -69,6 +74,7 @@ func (snips *SnipsCollection) All() []*Snip {
 	return all
 }
 
+// Remove a snippet by ID
 func (snips *SnipsCollection) Remove(id int) {
 	length := snips.v.Len()
 	for i := 0; i < length; i++ {
