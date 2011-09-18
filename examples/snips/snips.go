@@ -34,7 +34,7 @@ func serve() {
 	snips.Add("me too")
 
 	// Add a resource (URI subpath "snips" will direct to the snips object)
-	rest.Resource("/snips", snips)
+	rest.Resource("/snips/", snips)
 
 	// Start listening to HTTP requests
 	if err := http.ListenAndServe(address, nil); err != nil {

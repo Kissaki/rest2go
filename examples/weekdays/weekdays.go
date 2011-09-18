@@ -45,7 +45,7 @@ func main() {
 
 	var wd = new(Weekdays)
 	wd.wd = wdmap
-	rest.Resource("wd", wd)
+	rest.Resource("/wd/", wd)
 
 	if err := http.ListenAndServe(address, nil); err != nil {
 		log.Fatalln(err)
