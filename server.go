@@ -20,15 +20,17 @@ func resourceHandler(c http.ResponseWriter, req *http.Request) {
 		// no resource found, thus check if the path is a resource + ID
 		i := strings.LastIndex(uriPath, "/")
 		if i == -1 {
-			log.Println("Invalid URI-path ", uriPath)
+			log.Println("No slash found in URIPath ", uriPath)
 			NotFound(c)
 			return
 		}
-		id = uriPath[i+1:]
+		// Move index to after slash as that’s where we want to split
+		i++
+		id = uriPath[i:]
 		uriPathParent := uriPath[:i]
 		resource, ok = resources[uriPathParent]
 		if !ok {
-			log.Println("Invalid URI-path ", uriPath)
+			log.Println("Invalid URIPath-Parent ", uriPathParent)
 			NotFound(c)
 			return
 		}
