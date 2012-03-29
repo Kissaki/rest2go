@@ -7,7 +7,6 @@ package main
 
 import (
 	"log"
-	"container/vector"
 )
 
 // Snip definintion
@@ -24,14 +23,14 @@ func newSnip(id int, body string) *Snip {
 
 // SnipsCollection definition
 type SnipsCollection struct {
-	v      *vector.Vector
+	v      []Snip
 	nextId int
 }
 
 // SnipsCollection creation function
 func NewSnipsCollection() *SnipsCollection {
 	log.Println("Creating new SnipsCollection")
-	return &SnipsCollection{v: new(vector.Vector), nextId: 0}
+	return &SnipsCollection{v: make([]Snip, 0), nextId: 0}
 }
 
 // Add a new snippet (snipped with passed text as body)
@@ -41,34 +40,30 @@ func (snips *SnipsCollection) Add(body string) int {
 	snips.nextId++
 
 	snip := newSnip(id, body)
-	snips.v.Push(snip)
+	snips.v = append(snips.v, *snip)
 
 	return id
 }
 
 // Get a snippet by ID
 func (snips *SnipsCollection) WithId(id int) (*Snip, bool) {
-	log.Println("Finding Snip with id: ", id)
-	all := *snips.v
-	for _, v := range all {
-		snip, ok := v.(*Snip)
-		if ok && snip.Id == id {
-			return snip, true
+	log.Println("Searching for Snip with id: ", id)
+	for _, snip := range snips.v {
+		if snip.Id == id {
+			return &snip, true
 		}
 	}
 	return nil, false
 }
 
 // Get all snippets
-func (snips *SnipsCollection) All() []*Snip {
+func (snips *SnipsCollection) All() []Snip {
 	log.Println("Finding all Snips")
-	data := *snips.v
-	all := make([]*Snip, len(data))
+	data := snips.v
+	all := make([]Snip, len(snips.v))
 
-	for k, v := range data {
-		if snip, ok := v.(*Snip); ok {
-			all[k] = snip
-		}
+	for k, snip := range data {
+		all[k] = snip
 	}
 
 	return all
@@ -76,12 +71,12 @@ func (snips *SnipsCollection) All() []*Snip {
 
 // Remove a snippet by ID
 func (snips *SnipsCollection) Remove(id int) {
-	length := snips.v.Len()
-	for i := 0; i < length; i++ {
-		snip := snips.v.At(i).(*Snip)
-		if snip.Id == id {
-			snips.v.Delete(i)
-			return
+
+	newSnips := make([]Snip, len(snips.v))
+	for _, snip := range snips.v {
+		if snip.Id != id {
+			newSnips = append(newSnips, snip)
 		}
 	}
+	snips.v = newSnips
 }
