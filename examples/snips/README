@@ -1,7 +1,10 @@
 A simple rest.go server and client.
 
+Prerequirements
+$ go get github.com/Kissaki/rest.go
+
 Compile with
-$ gomake
+$ go build snips.go rest.go collection.go
 
 Start server with
 $ ./snips -server

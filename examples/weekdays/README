@@ -2,10 +2,10 @@ rest.go example server
 provides a mapping from 2-char weekday identifies to the full weekday names
 index and id-get functionality only for simplicity
 
-Requires rest.go obviously
+Prerequirements
+$ go get github.com/Kissaki/rest.go
 
 To compile:
-$ gomake
+$ go build weekdays.go
 To run:
-$ ./wd
-
+$ ./weekdays
