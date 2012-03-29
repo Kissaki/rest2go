@@ -1,16 +1,16 @@
+# Rest.go
+
 A RESTful HTTP client and server.
 
 
-Installation
-============
+## Installation
 
 Install by running:
 
-	goinstall github.com/Kissaki/rest.go
+	go get github.com/Kissaki/rest.go
 
 
-Usage
-=====
+## Usage
 
 See the *examples* folder for coded examples.
 
