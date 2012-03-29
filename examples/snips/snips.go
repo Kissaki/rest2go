@@ -4,11 +4,10 @@ package main
 import (
 	"flag"
 	"fmt"
-	"http"
+	"github.com/Kissaki/rest.go"
 	"io/ioutil"
 	"log"
-	"os"
-	"github.com/Kissaki/rest.go"
+	"net/http"
 )
 
 var server = flag.Bool("server", false, "start in server mode")
@@ -38,14 +37,14 @@ func serve() {
 
 	// Start listening to HTTP requests
 	if err := http.ListenAndServe(address, nil); err != nil {
-		log.Fatalln("Fatal: ListenAndServe: ", err.String())
+		log.Fatalln("Fatal: ListenAndServe: ", err.Error())
 	}
 }
 
 func client() {
 	log.Println("Starting Client")
 	var snips *rest.Client
-	var err os.Error
+	var err error
 
 	// Create a rest client for the specified URI
 	if snips, err = rest.NewClient("http://127.0.0.1:3000/snips/"); err != nil {

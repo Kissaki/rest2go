@@ -9,9 +9,9 @@ package main
 
 import (
 	"fmt"
-	"http"
+	rest "github.com/Kissaki/rest.go"
 	"log"
-	"github.com/Kissaki/rest.go"
+	"net/http"
 )
 
 var wdmap = map[string]string{
