@@ -6,7 +6,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/Kissaki/rest.go"
+	"github.com/Kissaki/rest2go"
 	"io/ioutil"
 	"net/http"
 	"strconv"

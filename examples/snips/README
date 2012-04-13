@@ -1,10 +1,10 @@
-A simple rest.go server and client.
+A simple rest2go server and client.
 
 Prerequirements
-$ go get github.com/Kissaki/rest.go
+$ go get github.com/Kissaki/rest2go
 
 Compile with
-$ go build snips.go rest.go collection.go
+$ go build snips.go rest2go collection.go
 
 Start server with
 $ ./snips -server

@@ -4,7 +4,7 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/Kissaki/rest.go"
+	"github.com/Kissaki/rest2go"
 	"io/ioutil"
 	"log"
 	"net/http"

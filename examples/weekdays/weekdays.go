@@ -9,7 +9,7 @@ package main
 
 import (
 	"fmt"
-	rest "github.com/Kissaki/rest.go"
+	rest "github.com/Kissaki/rest2go"
 	"log"
 	"net/http"
 )
