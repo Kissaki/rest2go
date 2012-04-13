@@ -1,4 +1,4 @@
-# Rest.go
+# Rest2go
 
 A RESTful HTTP client and server.
 
@@ -7,7 +7,7 @@ A RESTful HTTP client and server.
 
 Install by running:
 
-	go get github.com/Kissaki/rest.go
+	go get github.com/Kissaki/rest2go
 
 
 ## Usage
